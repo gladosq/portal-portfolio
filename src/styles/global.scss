@@ -1,0 +1,35 @@
+#root {
+  margin: 0 auto;
+  min-width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 100vw;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  font-family: 'JetBrains Mono', Courier, monospace;
+  color: #82aad3;
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(195, 197, 206, 0.4);
+    border-radius: 6px;
+    //border: 1px solid rgba(255, 255, 255, 0.1);
+    //border: 1px solid #0d1117;
+  }
+}
