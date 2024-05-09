@@ -21,6 +21,7 @@ import AudioPlayerComponent from '../AudioPlayerComponent/AudioPlayerComponent.t
 import {BlendFunction} from 'postprocessing';
 import Paper from '../Paper/Paper.tsx';
 import usePortalStore from '../../store/portal.ts';
+import GlitchEffect from '../../effects/GlitchEffect.tsx';
 
 export default function MainPage() {
   const {isMainPageScrolled, setIsMainPageScrolled} = usePortalStore();
@@ -87,7 +88,7 @@ export default function MainPage() {
               {/*/>*/}
               <EnvironmentRoom/>
               {/*<Glados/>*/}
-              {/*<GlitchEffect/>*/}
+              <GlitchEffect/>
               <Vignette/>
             </EffectComposer>
           </Canvas>
