@@ -13,7 +13,7 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  font-family: 'JetBrains Mono', Courier, monospace;
+  font-family: 'Montserrat', Arial, sans-serif;
   color: #82aad3;
 }
 
@@ -29,7 +29,5 @@ body {
   &::-webkit-scrollbar-thumb {
     background-color: rgba(195, 197, 206, 0.4);
     border-radius: 6px;
-    //border: 1px solid rgba(255, 255, 255, 0.1);
-    //border: 1px solid #0d1117;
   }
 }

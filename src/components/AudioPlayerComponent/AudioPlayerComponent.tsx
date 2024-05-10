@@ -3,15 +3,15 @@ import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/src/styles.scss';
 import {useEffect, useState} from 'react';
 import track1 from './../../../public/audio/9999999.mp3';
-import track2 from './../../../public/audio/self-esteem-fund.mp3';
+import track2 from './../../../public/audio/you-know-her.mp3';
 
 export default function AudioPlayerComponent() {
   const [currentTrack, setTrackIndex] = useState(0);
-  const [play, setPlay] = useState(false);
+  const [, setPlay] = useState(false);
 
   const playlist = [
-    { src: track1 },
     { src: track2 },
+    { src: track1 },
   ];
 
   const clickNextHandler = () => {
