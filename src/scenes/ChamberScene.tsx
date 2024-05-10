@@ -17,7 +17,3 @@ export default function ChamberScene({items}: ChamberSceneProps) {
     )
   })
 }
-
-// <RigidBody colliders="hull" position={[-1, 2, 0]}>
-//   <Core/>
-// </RigidBody>

@@ -1,12 +1,21 @@
 import {GlitchMode} from 'postprocessing';
 import {Glitch} from '@react-three/postprocessing';
+import {Vector2} from 'three';
+
+const vectorDelay = new Vector2();
+const vectorDuration = new Vector2();
+const vectorStrength = new Vector2();
 
 export default function GlitchEffect() {
+  vectorDelay.set(15.5, 30.5);
+  vectorDuration.set(0.1, 0.3);
+  vectorStrength.set(0.1, 0.2);
+
   return (
     <Glitch
-      delay={[15.5, 30.5]}
-      duration={[0.1, 0.3]}
-      strength={[0.1, 0.2]}
+      delay={vectorDelay}
+      duration={vectorDuration}
+      strength={vectorStrength}
       mode={GlitchMode.SPORADIC}
       active
       ratio={0.05}
