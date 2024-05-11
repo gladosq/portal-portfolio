@@ -1,10 +1,18 @@
 import {Float, useScroll, Text} from '@react-three/drei';
 import {useFrame} from '@react-three/fiber';
-import {useRef} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
+import {getRandomNumber} from '../utils/math.ts';
+import {phrases} from '../store/portal.ts';
 
 export default function TextScroll() {
   const pageScroll = useScroll();
   const textOneRef = useRef<any>(null!);
+  const [phraseIndex, setPhraseIndex] = useState<number>();
+
+  useLayoutEffect(() => {
+    const randomN = getRandomNumber(0, phrases.length - 1);
+    setPhraseIndex(randomN);
+  }, []);
 
   const fontProps = {
     font: './../../public/fonts/montserrat-600.woff',
@@ -34,9 +42,10 @@ export default function TextScroll() {
             color='white'
             anchorX='right'
             anchorY='middle'
+            textAlign={"left"}
             {...fontProps}
           >
-            Знаешь ли ты, что людей с нечистой совестью..
+            {(phraseIndex || phraseIndex === 0) && phrases[phraseIndex][0]}
           </Text>
         </group>
       </Float>
@@ -49,10 +58,11 @@ export default function TextScroll() {
             color='white'
             anchorX='right'
             anchorY='middle'
+            textAlign={"left"}
             depthOffset={0.1}
             {...fontProps}
           >
-            ..легче напугать громкими звуками?
+            {(phraseIndex || phraseIndex === 0) && phrases[phraseIndex][1]}
           </Text>
         </group>
       </Float>

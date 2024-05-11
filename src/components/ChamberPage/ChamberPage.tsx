@@ -1,93 +1,128 @@
 import s from './ChamberPage.module.scss';
-import {Canvas, useLoader} from '@react-three/fiber';
-import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
+import {Canvas} from '@react-three/fiber';
+import {Suspense, useEffect, useRef, useState} from 'react';
 import {
-  ContactShadows,
-  Environment, MeshReflectorMaterial,
-  OrbitControls,
-  Torus,
-  TorusKnot,
-  useGLTF
+  Environment,
+  OrbitControls, Text,
 } from '@react-three/drei';
-import {useBox, usePlane} from '@react-three/cannon';
-import {TextureLoader} from 'three';
 import {
   CuboidCollider,
-  InstancedRigidBodies,
-  InstancedRigidBodyProps,
   Physics,
-  RapierRigidBody, RigidBody
+  RigidBody
 } from '@react-three/rapier';
 import ChamberScene from '../../scenes/ChamberScene.tsx';
-import Core from '../../shapes/Core.tsx';
 import {nanoid} from 'nanoid';
+import SpotlightButton from '../../effects/SpotlightButton.tsx';
+import {Physics as PhysicsCannon} from '@react-three/cannon';
+import GlassBox from '../../shapes/GlassBox.tsx';
+import Core from '../../shapes/Core.tsx';
+import SpawnButton from '../../shapes/CoreButton.tsx';
+import ChamberFloor from '../../shapes/ChamberFloor.tsx';
+
+const fontProps = {
+  font: './../../public/fonts/montserrat-600.woff',
+  fontSize: 2.5,
+  lineHeight: 1,
+  'material-toneMapped': false,
+  outlineWidth: 0.01,
+  outlineColor: 'white',
+};
 
 export default function ChamberPage() {
-
   const [items, setItems] = useState<string[]>([]);
+  const [isClickedButton, setIsClickedButton] = useState<boolean>();
+  const textCounterRef = useRef(null!);
+  const [counter, setCounter] = useState<number>(1);
 
-  const {scene, nodes: nodesCore, materials: materialsCore} = useGLTF('/models/core.glb');
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (isClickedButton) {
+        setIsClickedButton(false);
+      }
+    }, 400);
 
+    return () => clearTimeout(timeoutId);
+  }, [isClickedButton]);
 
   return (
     <div className={s.wrapper}>
       <div className={s.canvasContainer}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<h1>loading</h1>}>
           <Canvas
             shadows
             dpr={[1, 1.5]}
-            camera={{ position: [-15, 15, 18], fov: 35 }}
+            camera={{position: [-30, 15, 24], fov: 35}}
             gl={{
-              alpha: false
+              alpha: false,
+              powerPreference: 'high-performance',
+              stencil: true,
+              antialias: true,
+              depth: true
             }}
+            className={s.canvas}
           >
-            <fog attach="fog" args={['#17171b', 30, 40]} />
-            <color attach="background" args={['#17171b']} />
-            {/*<fog attach="fog" args={['#191920', 0, 26]} />*/}
-            <Environment preset="forest" />
+            {/*-- Camera --*/}
+            <OrbitControls
+              enableZoom={false}
+              maxPolarAngle={1.3}
+              minPolarAngle={1.3}
+              minAzimuthAngle={-1.4}
+              maxAzimuthAngle={-0.4}
+            />
+            <Text
+              ref={textCounterRef}
+              position={[2.2, 5.1, 8]}
+              rotation={[0, -1.5, 0]}
+              maxWidth={6}
+              overflowWrap={'break-word'}
+              color='white'
+              anchorX='right'
+              anchorY='middle'
+              {...fontProps}
+            >
+              {counter}
+            </Text>
 
+            {/*-- Effects --*/}
+            <fog attach='fog' args={['#17171b', 40, 60]}/>
+
+            {/*-- Environment --*/}
+            <ChamberFloor/>
+            <Environment preset='city'/>
+            <color attach='background' args={['#17171b']}/>
 
             <Physics>
-              <group>
-                <RigidBody scale={4} colliders="hull" position={[-1, 2, 0]}>
-                  <Core onClick={() => {
-                    console.log('clicked!');
-                    setItems((prevState) => [...prevState, nanoid()]);
-                  }}/>
-                </RigidBody>
+              {/*-- Models --*/}
+              <RigidBody colliders='hull' position={[0, 1.2, -2]} rotation={[1, -6, 6]}>
+                <Core/>
+              </RigidBody>
+              <GlassBox/>
+              <ChamberScene items={items}/>
+              <SpawnButton
+                onClick={() => {
+                  if (isClickedButton) return;
+                  // setIsClickedButton(!isClickedButton);
+                  setCounter(counter + 1);
+                  setItems(() => [...items, nanoid()]);
+                }}
+                isClickedButton={isClickedButton}
+              />
 
-                <ChamberScene items={items}/>
-
-                <directionalLight castShadow intensity={2} position={[10, 6, 6]} shadow-mapSize={[1024, 1024]}>
-                  <orthographicCamera attach="shadow-camera" left={-20} right={20} top={20} bottom={-20} />
-                </directionalLight>
-
-                {/*<ContactShadows*/}
-                {/*  scale={20}*/}
-                {/*  blur={0.4}*/}
-                {/*  opacity={0.2}*/}
-                {/*  position={[-0, -1.5, 0]}*/}
-                {/*/>*/}
-
-                <OrbitControls />
-                <mesh position={[0, -1.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                  <planeGeometry args={[50, 50]} />
-                  <MeshReflectorMaterial
-                    blur={[400, 100]}
-                    resolution={1024}
-                    mixBlur={1}
-                    mixStrength={15}
-                    depthScale={1}
-                    minDepthThreshold={0.85}
-                    color="#151515"
-                    metalness={0.6}
-                    roughness={1}
-                    mirror={0.1}
-                  />
-                </mesh>
-              </group>
-
-              <CuboidCollider position={[0, -2, 0]} args={[20, 0.5, 20]} />
+              {/*-- Light --*/}
+              <PhysicsCannon>
+                <SpotlightButton/>
+              </PhysicsCannon>
+              <spotLight
+                position={[15, 20, 15]}
+                angle={40}
+                penumbra={1}
+                intensity={2800}
+                castShadow
+                shadow-mapSize={2024}
+                distance={420}
+                color={'rgb(130,159,176)'}
+              />
+              <CuboidCollider position={[0, -2, 0]} args={[70, 0.5, 70]}/>
             </Physics>
           </Canvas>
         </Suspense>

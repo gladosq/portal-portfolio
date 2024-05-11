@@ -1,12 +1,7 @@
-$border-radius: 4px;
-$container-width: 600px;
-$container-height: 600px;
-$gradient-size: 720px;
-
-
 .wrapper {
   height: 100vh;
   position: relative;
+  background: #395662;
 }
 
 .canvasContainer {
@@ -17,9 +12,6 @@ $gradient-size: 720px;
   height: 100%;
 }
 
-.content {
-  position: relative;
-  z-index: 1;
-  padding: 40px;
-  width: max-content;
+.canvas {
+  background: #395662;
 }

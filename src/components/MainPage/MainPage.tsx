@@ -4,41 +4,41 @@ import {Suspense} from 'react';
 import Glados from '../../shapes/Glados.tsx';
 import EnvironmentRoom from '../../environments/EnvironmentRoom.tsx';
 import {EffectComposer, Noise, Vignette} from '@react-three/postprocessing';
-import {ScrollControls,} from '@react-three/drei';
-import RotatingScreen from '../../camera/RotatingScreen.tsx';
-import AudioPlayerComponent from '../AudioPlayerComponent/AudioPlayerComponent.tsx';
+import {ScrollControls} from '@react-three/drei';
+import RotatingMainScreen from '../../camera/RotatingMainScreen.tsx';
 import {BlendFunction} from 'postprocessing';
 import GlitchEffect from '../../effects/GlitchEffect.tsx';
 import TextScroll from '../../shapes/TextScroll.tsx';
 import RotatingLightEffect from '../../effects/RotatingLightEffect.tsx';
-import {Link} from 'react-router-dom';
+import {useAnimateRoute} from '../../hooks/useAnimateRoute.tsx';
+import {clsx} from 'clsx';
 
 export default function MainPage() {
+  const animationClass = useAnimateRoute();
 
   return (
-    <div className={s.wrapper}>
-      <div className={s.content}>
-        <AudioPlayerComponent/>
-        <Link to={'/chamber'}>go to chamber</Link>
-      </div>
+    <div className={clsx(s.wrapper, animationClass)}>
       <div className={s.canvasContainer}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<h1>loading</h1>}>
           <Canvas
+            className={s.canvas}
             shadows
             dpr={[1, 2]}
             camera={{position: [0, 0, 10], fov: 64}}
             gl={{
               alpha: false,
-              powerPreference: "high-performance",
+              powerPreference: 'high-performance',
               stencil: true,
               antialias: true,
-              depth: true,
+              depth: true
             }}
           >
             <ScrollControls
               pages={1.6}
             >
               <EffectComposer>
+
+
                 {/*-- Light --*/}
                 <RotatingLightEffect/>
                 <directionalLight
@@ -54,7 +54,7 @@ export default function MainPage() {
                 <EnvironmentRoom/>
 
                 {/*-- Camera --*/}
-                <RotatingScreen/>
+                <RotatingMainScreen/>
 
                 {/*-- Effects --*/}
                 <GlitchEffect/>

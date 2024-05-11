@@ -11,7 +11,6 @@ export default function RotatingLightEffect() {
 
   return (
     <group ref={ref}>
-
       <directionalLight
         position={[50, -4, -10]}
         castShadow
