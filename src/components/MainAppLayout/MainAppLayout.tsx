@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import usePortalStore from '../../store/portal.ts';
 import {clsx} from 'clsx';
 import ArrowIcon from '../../icons/ArrowIcon.tsx';
+import bamImage from './../../../public/images/bam.gif';
 
 export default function MainAppLayout() {
   const [isRouting, setIsRouting] = useState(false);
@@ -72,7 +73,7 @@ export default function MainAppLayout() {
           </>
         ) : (
           <div className={s.fullScreenOverlay}>
-            <img src="public/images/bam.gif" alt={'Бам'}/>
+            <img src={bamImage} alt={'Бам'}/>
             <button
               className={s.bamButton}
               onClick={() => {
