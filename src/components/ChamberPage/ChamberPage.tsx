@@ -6,7 +6,7 @@ import {
   OrbitControls, Text,
 } from '@react-three/drei';
 import {
-  CuboidCollider,
+  CuboidCollider, InstancedRigidBodyProps,
   Physics,
   RigidBody
 } from '@react-three/rapier';
@@ -18,6 +18,7 @@ import GlassBox from '../../shapes/GlassBox.tsx';
 import Core from '../../shapes/Core.tsx';
 import SpawnButton from '../../shapes/CoreButton.tsx';
 import ChamberFloor from '../../shapes/ChamberFloor.tsx';
+import {button, useControls} from 'leva';
 
 const fontProps = {
   font: './../../public/fonts/montserrat-600.woff',
@@ -27,6 +28,17 @@ const fontProps = {
   outlineWidth: 0.01,
   outlineColor: 'white',
 };
+
+const createBody = (): InstancedRigidBodyProps => ({
+  key: Math.random(),
+  position: [Math.random() * 20, Math.random() * 20, Math.random() * 20],
+  rotation: [
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2,
+    Math.random() * Math.PI * 2
+  ],
+  scale: [0.5 + Math.random(), 0.5 + Math.random(), 0.5 + Math.random()]
+});
 
 export default function ChamberPage() {
   const [items, setItems] = useState<string[]>([]);
@@ -43,6 +55,30 @@ export default function ChamberPage() {
 
     return () => clearTimeout(timeoutId);
   }, [isClickedButton]);
+
+  // const {
+  //   nodes: { Suzanne }
+  // } = useSuzanne();
+
+  const [bodies, setBodies] = useState<InstancedRigidBodyProps[]>(() =>
+    Array.from({
+      length: 100
+    }).map(() => createBody())
+  );
+
+  const addMesh = () => {
+    if (bodies.length < 20) {
+      setBodies((bodies) => [...bodies, createBody()]);
+    }
+  };
+
+  useControls(
+    {
+      "add instanced mesh": button(addMesh),
+    },
+    [bodies]
+  );
+
 
   return (
     <div className={s.wrapper}>
@@ -63,7 +99,8 @@ export default function ChamberPage() {
           >
             {/*-- Camera --*/}
             <OrbitControls
-              enableZoom={false}
+              // enableZoom={true}
+              // enableRotate={true}
               maxPolarAngle={1.3}
               minPolarAngle={1.3}
               minAzimuthAngle={-1.4}
@@ -96,8 +133,36 @@ export default function ChamberPage() {
               <RigidBody colliders='hull' position={[0, 1.2, -2]} rotation={[1, -6, 6]}>
                 <Core/>
               </RigidBody>
+
+              {/*<group>*/}
+              {/*  <InstancedRigidBodies instances={bodies} ref={api} colliders="hull">*/}
+              {/*    <instancedMesh*/}
+              {/*      ref={ref}*/}
+              {/*      castShadow*/}
+              {/*      args={[(nodes as any).Object_130.geometry, undefined, 20]}*/}
+              {/*      count={bodies.length}*/}
+              {/*      onClick={(evt) => {*/}
+              {/*        api.current![evt.instanceId!].applyTorqueImpulse(*/}
+              {/*          {*/}
+              {/*            x: 0,*/}
+              {/*            y: 50,*/}
+              {/*            z: 0*/}
+              {/*          },*/}
+              {/*          true*/}
+              {/*        );*/}
+              {/*      }}*/}
+              {/*    >*/}
+              {/*      <meshPhysicalMaterial />*/}
+              {/*    </instancedMesh>*/}
+              {/*  </InstancedRigidBodies>*/}
+              {/*</group>*/}
+
+              {/*<CubeCompanion/>*/}
               <GlassBox/>
-              <ChamberScene items={items}/>
+              <ChamberScene
+                items={items}
+                // position={chamberItemVec}
+              />
               <SpawnButton
                 onClick={() => {
                   if (isClickedButton) return;

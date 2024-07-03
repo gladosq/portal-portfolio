@@ -1,4 +1,4 @@
-import {Float, useGLTF, useScroll, useTexture} from '@react-three/drei';
+import {Float, useGLTF, useScroll} from '@react-three/drei';
 import {useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {calcRotateAngle} from '../utils/math.ts';
@@ -8,9 +8,6 @@ export default function Glados() {
   const {scene} = useGLTF('/models/glados.glb');
   const group = useRef<Group>(null!);
   const pageScroll = useScroll();
-
-  const map = useTexture('./images/roof.jpg');
-
 
   useFrame((state) => {
     const r1 = pageScroll.range(0 / 6, 1 / 4);
