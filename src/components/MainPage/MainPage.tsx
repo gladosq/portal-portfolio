@@ -1,6 +1,6 @@
 import s from './MainPage.module.scss';
 import {Canvas} from '@react-three/fiber';
-import {Suspense, useState} from 'react';
+import {Suspense} from 'react';
 import Glados from '../../shapes/Glados.tsx';
 import EnvironmentRoom from '../../environments/EnvironmentRoom.tsx';
 import {EffectComposer, Noise, Vignette} from '@react-three/postprocessing';
@@ -12,17 +12,15 @@ import TextScroll from '../../shapes/TextScroll.tsx';
 import RotatingLightEffect from '../../effects/RotatingLightEffect.tsx';
 import {useAnimateRoute} from '../../hooks/useAnimateRoute.tsx';
 import {clsx} from 'clsx';
+import FullScreenPreloader from '../FullScreenPreloader/FullScreenPreloader.tsx';
 
 export default function MainPage() {
   const animationClass = useAnimateRoute();
 
-  const [interacted, setInteracted] = useState(false);
-
   return (
     <div className={clsx(s.wrapper, animationClass)}>
       <div className={s.canvasContainer}>
-        {interacted ? (
-          <Suspense fallback={<h1>loading</h1>}>
+          <Suspense fallback={<FullScreenPreloader/>}>
             <Canvas
               className={s.canvas}
               shadows
@@ -65,16 +63,6 @@ export default function MainPage() {
               </ScrollControls>
             </Canvas>
           </Suspense>
-        ) : (
-          <>
-            <button
-              onClick={() => {
-                setInteracted(true);
-              }}
-            >click</button>
-          </>
-        )}
-
       </div>
     </div>
   );

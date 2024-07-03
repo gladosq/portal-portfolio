@@ -13,7 +13,7 @@ export default function MainAppLayout() {
   const {pathname} = useLocation();
   const navigate = useNavigate();
 
-  const {routingPage, setRoutingPage} = usePortalStore();
+  const {routingPage, setRoutingPage, interacted, setInteracted} = usePortalStore();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -25,51 +25,66 @@ export default function MainAppLayout() {
     }
   }, [routingPage]);
 
-  console.log('routingPage:', routingPage);
-  console.log('isRouting:', isRouting);
 
   return (
-    <Suspense fallback={<h1>loading</h1>}>
+    <Suspense>
       <div className={clsx(s.wrapper, isRouting && s.wrapperRouting)}>
-        <div className={s.content}>
-          <AudioPlayerComponent/>
-          <div className={s.links}>
-            {pathname === '/' &&
-              <Link
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsRouting(true);
-                  setTimeout(() => {
-                    navigate('/chamber');
-                    setRoutingPage('/chamber');
-                  }, 600);
-                }}
-                className={s.link}
-                to={'/chamber'}
-              >
-                chamber
-                <ArrowIcon/>
-              </Link>}
-            {pathname === '/chamber' &&
-              <Link
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsRouting(true);
-                  setTimeout(() => {
-                    navigate('/');
-                    setRoutingPage('/');
-                  }, 600);
-                }}
-                className={s.link}
-                to={'/'}
-              >
-                glados
-                <ArrowIcon/>
-              </Link>}
+        {interacted ? (
+          <>
+            <div className={s.content}>
+              <AudioPlayerComponent/>
+              <div className={s.links}>
+                {pathname === '/' &&
+                  <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsRouting(true);
+                      setTimeout(() => {
+                        navigate('/chamber');
+                        setRoutingPage('/chamber');
+                      }, 600);
+                    }}
+                    className={s.link}
+                    to={'/chamber'}
+                  >
+                    chamber
+                    <ArrowIcon/>
+                  </Link>}
+                {pathname === '/chamber' &&
+                  <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsRouting(true);
+                      setTimeout(() => {
+                        navigate('/');
+                        setRoutingPage('/');
+                      }, 600);
+                    }}
+                    className={s.link}
+                    to={'/'}
+                  >
+                    glados
+                    <ArrowIcon/>
+                  </Link>}
+              </div>
+            </div>
+            <Outlet/>
+          </>
+        ) : (
+          <div className={s.fullScreenOverlay}>
+            <img src="public/images/bam.gif" alt={'Бам'}/>
+            <button
+              className={s.bamButton}
+              onClick={() => {
+                setInteracted(true);
+              }}
+            >
+              БАМ БЛЯТЬ
+            </button>
           </div>
-        </div>
-        <Outlet/>
+        )}
       </div>
     </Suspense>
-  );
+  )
+    ;
 }

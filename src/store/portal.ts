@@ -10,11 +10,15 @@ export const phrases = [
 interface PortalState {
   routingPage?: string;
   setRoutingPage: (value: string) => void;
+  interacted: boolean;
+  setInteracted: (value: boolean) => void;
 }
 
 const usePortalStore = create<PortalState>((set) => ({
   routingPage: undefined,
-  setRoutingPage: (value) => set(() => ({routingPage: value}))
+  interacted: false,
+  setRoutingPage: (value) => set(() => ({routingPage: value})),
+  setInteracted: (value) => set(() => ({interacted: value})),
 }));
 
 export default usePortalStore;

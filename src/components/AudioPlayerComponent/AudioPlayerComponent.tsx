@@ -7,11 +7,23 @@ import track4 from './../../../public/audio/self_esteem_fund.mp3';
 import PlayerIcon from './../../icons/PlayerIcon.tsx';
 import PauseIcon from './../../icons/PauseIcon.tsx';
 import ForwardIcon from '../../icons/ForwardIcon.tsx';
+import usePortalStore from '../../store/portal.ts';
 
 export default function AudioPlayerComponent() {
+  const {interacted} = usePortalStore();
+
+
   const [currentTrack, setTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(interacted);
   const audioRef = useRef<HTMLAudioElement>(null!);
+
+
+  useEffect(() => {
+    setIsPlaying(interacted);
+  }, [interacted]);
+
+
+
 
   const playlist = [
     {src: track1},

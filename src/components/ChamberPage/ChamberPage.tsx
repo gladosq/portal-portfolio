@@ -6,7 +6,7 @@ import {
   OrbitControls, Text,
 } from '@react-three/drei';
 import {
-  CuboidCollider, InstancedRigidBodyProps,
+  CuboidCollider,
   Physics,
   RigidBody
 } from '@react-three/rapier';
@@ -18,27 +18,16 @@ import GlassBox from '../../shapes/GlassBox.tsx';
 import Core from '../../shapes/Core.tsx';
 import SpawnButton from '../../shapes/CoreButton.tsx';
 import ChamberFloor from '../../shapes/ChamberFloor.tsx';
-import {button, useControls} from 'leva';
+import FullScreenPreloader from '../FullScreenPreloader/FullScreenPreloader.tsx';
 
 const fontProps = {
-  font: './../../public/fonts/montserrat-600.woff',
+  font: '/fonts/montserrat-600.woff',
   fontSize: 2.5,
   lineHeight: 1,
   'material-toneMapped': false,
   outlineWidth: 0.01,
   outlineColor: 'white',
 };
-
-const createBody = (): InstancedRigidBodyProps => ({
-  key: Math.random(),
-  position: [Math.random() * 20, Math.random() * 20, Math.random() * 20],
-  rotation: [
-    Math.random() * Math.PI * 2,
-    Math.random() * Math.PI * 2,
-    Math.random() * Math.PI * 2
-  ],
-  scale: [0.5 + Math.random(), 0.5 + Math.random(), 0.5 + Math.random()]
-});
 
 export default function ChamberPage() {
   const [items, setItems] = useState<string[]>([]);
@@ -56,34 +45,10 @@ export default function ChamberPage() {
     return () => clearTimeout(timeoutId);
   }, [isClickedButton]);
 
-  // const {
-  //   nodes: { Suzanne }
-  // } = useSuzanne();
-
-  const [bodies, setBodies] = useState<InstancedRigidBodyProps[]>(() =>
-    Array.from({
-      length: 100
-    }).map(() => createBody())
-  );
-
-  const addMesh = () => {
-    if (bodies.length < 20) {
-      setBodies((bodies) => [...bodies, createBody()]);
-    }
-  };
-
-  useControls(
-    {
-      "add instanced mesh": button(addMesh),
-    },
-    [bodies]
-  );
-
-
   return (
     <div className={s.wrapper}>
       <div className={s.canvasContainer}>
-        <Suspense fallback={<h1>loading</h1>}>
+        <Suspense fallback={<FullScreenPreloader/>}>
           <Canvas
             shadows
             dpr={[1, 1.5]}
@@ -99,8 +64,8 @@ export default function ChamberPage() {
           >
             {/*-- Camera --*/}
             <OrbitControls
-              // enableZoom={true}
-              // enableRotate={true}
+              enableZoom={false}
+              enableRotate={true}
               maxPolarAngle={1.3}
               minPolarAngle={1.3}
               minAzimuthAngle={-1.4}
@@ -166,7 +131,7 @@ export default function ChamberPage() {
               <SpawnButton
                 onClick={() => {
                   if (isClickedButton) return;
-                  // setIsClickedButton(!isClickedButton);
+                  setIsClickedButton(!isClickedButton);
                   setCounter(counter + 1);
                   setItems(() => [...items, nanoid()]);
                 }}

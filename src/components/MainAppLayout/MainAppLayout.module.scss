@@ -9,35 +9,23 @@
     width: 100%;
     height: 100%;
     transform: translateX(-100%);
-    //opacity: 0;
     z-index: 10;
     pointer-events: none;
-    //will-change: transform, opacity;
     transition: ease-in-out;
     transition-duration: 0.6s, 0.3s;
     transition-property: transform, opacity;
     background: #181818;
-    //animation: slideOut 1s ease-in-out 1;
-
-
-
-
   }
 }
 
 .wrapperRouting {
   &::before {
     opacity: 1;
-    //opacity: 0.5;
     transform: translateX(0);
     pointer-events: auto;
-
     transition: ease-in-out;
     transition-duration: 0.6s, 0.3s;
     transition-property: transform, opacity;
-    //animation: slideIn 1s ease-in-out forwards;
-
-
   }
 }
 
@@ -55,8 +43,6 @@
 .links {
   display: flex;
   flex-direction: column;
-  //margin-left: 4px;
-  //margin-bottom: 14px;
   gap: 6px;
 }
 
@@ -89,6 +75,31 @@
 
   &:active {
     opacity: 0.2;
+  }
+}
+
+.fullScreenOverlay {
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bamButton {
+  background: none;
+  font-size: 50px;
+  color: white;
+  border: 2px solid white;
+  cursor: pointer;
+  margin-top: 30px;
+
+  &:hover {
+    color: red;
+    border: 2px solid red;
   }
 }
 

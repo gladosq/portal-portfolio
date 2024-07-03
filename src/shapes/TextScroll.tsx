@@ -15,7 +15,7 @@ export default function TextScroll() {
   }, []);
 
   const fontProps = {
-    font: './../../public/fonts/montserrat-600.woff',
+    font: '/fonts/montserrat-600.woff',
     fontSize: 0.5,
     lineHeight: 1,
     'material-toneMapped': false,
